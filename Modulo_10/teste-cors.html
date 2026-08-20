@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html>
+<body>
+    <h1>Teste CORS</h1>
+    <button onclick="testar()">Buscar Produtos</button>
+    <pre id="resultado"></pre>
+
+    <script>
+        async function testar() {
+            const resultado = document.getElementById("resultado");
+            resultado.textContent = "Carregando...";
+            try {
+                const resposta = await fetch("http://localhost:5117/api/v1/Produtos");
+                const dados = await resposta.json();
+                resultado.textContent = JSON.stringify(dados, null, 2);
+            } catch (erro) {
+                resultado.textContent = "Erro: " + erro;
+            }
+        }
+    </script>
+</body>
+</html>

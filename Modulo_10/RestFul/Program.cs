@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using RestFul.Data;
 using System.Text;
+using Asp.Versioning;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,8 +17,53 @@ builder.Services.AddDbContext<AppDbContext>(options =>
         connectionString,
         ServerVersion.AutoDetect(connectionString)));
 
+builder.Services.AddApiVersioning(options =>
+{
+    options.DefaultApiVersion = new ApiVersion(1, 0);
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.ReportApiVersions = true;
+})
+.AddApiExplorer(options =>
+{
+    options.GroupNameFormat = "'v'VVV";
+    options.SubstituteApiVersionInUrl = true;
+});
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("FrontendOrigin", policy =>
+    {
+        policy.WithOrigins("http://localhost:5500")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 builder.Services.AddSwaggerGen(options =>
 {
+    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Title = "RestFul API",
+        Version = "v1",
+        Description = "API REST desenvolvida para fins de estudo no bootcamp Entra21.",
+        Contact = new Microsoft.OpenApi.Models.OpenApiContact
+        {
+            Name = "C# Noturno"
+        }
+    });
+
+    options.SwaggerDoc("v2", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Title = "RestFul API",
+        Version = "v2",
+        Description = "Versão 2 — inclui PrecoComDesconto na listagem de produtos.",
+        Contact = new Microsoft.OpenApi.Models.OpenApiContact { Name = "C# Noturno" }
+    });
+
+    var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    options.IncludeXmlComments(xmlPath);
+
     options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -64,10 +110,16 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "RestFul API v1");
+        options.SwaggerEndpoint("/swagger/v2/swagger.json", "RestFul API v2");
+    });
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("FrontendOrigin");
 
 app.UseAuthentication();
 app.UseAuthorization();
