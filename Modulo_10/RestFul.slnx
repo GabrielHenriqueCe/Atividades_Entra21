@@ -1,0 +1,8 @@
+<Solution>
+  <File Path="teste-cors.html" />
+  <Project Path="01-Presentation/01-Presentation.csproj" />
+  <Project Path="02-Application/02-Application.csproj" />
+  <Project Path="03-Infrastructure/03-Infrastructure.csproj" />
+  <Project Path="04-Domain/04-Domain.csproj" />
+  <Project Path="05-Tests/05-Tests.csproj" />
+</Solution>
