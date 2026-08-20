@@ -19,6 +19,7 @@
     <Project Path="Modulo_09/MVC/MVC.csproj" Id="7af86fa1-55fb-45a6-8275-5108f4008846" />
   </Folder>
   <Folder Name="/Modulo_10/">
+    <File Path="teste-cors.html" />
     <Project Path="Modulo_10/RestFul/RestFul.csproj" Id="1792c00a-f8ed-44ff-92aa-eddc149132ca" />
   </Folder>
   <Project Path="Utils/Utilities.csproj" Id="b87c6318-52d9-4b9b-8cd1-cb4f3dcdb58a" />
